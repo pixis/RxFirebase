@@ -48,6 +48,7 @@ tasks.withType(Test) {
 
 
 dependencies {
+  compile "com.google.firebase:firebase-auth:$firebase_version"
   compile "com.google.firebase:firebase-database:$firebase_version"
   compile 'io.reactivex:rxjava:1.1.8'
   compile 'com.android.support:support-annotations:24.1.1'
