@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: 'jacoco-android'
 apply plugin: 'com.novoda.bintray-release'
 
@@ -11,7 +12,7 @@ android {
   }
 
   compileSdkVersion 24
-  buildToolsVersion "24.0.1"
+  buildToolsVersion "$build_tools_version"
 
   defaultConfig {
     minSdkVersion 9
@@ -34,6 +35,9 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+  }
 }
 
 tasks.withType(Test) {
@@ -44,10 +48,7 @@ tasks.withType(Test) {
 
 
 dependencies {
-
-  compile 'com.google.firebase:firebase-auth:9.2.1'
-  compile 'com.google.firebase:firebase-database:9.2.1'
-  compile 'com.google.firebase:firebase-storage:9.2.1'
+  compile "com.google.firebase:firebase-database:$firebase_version"
   compile 'io.reactivex:rxjava:1.1.8'
   compile 'com.android.support:support-annotations:24.1.1'
 
@@ -56,6 +57,7 @@ dependencies {
   testCompile "org.mockito:mockito-core:2.0.7-beta"
   testCompile 'io.reactivex:rxjava:1.1.8'
   testCompile 'org.assertj:assertj-core:1.7.1'
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 publish {
@@ -65,4 +67,7 @@ publish {
   publishVersion = '0.0.10'
   desc = 'RxJava wrapper on Google Firebase for Android library'
   website = 'https://github.com/nmoskalenko/rxFirebase'
+}
+repositories {
+  mavenCentral()
 }
