@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'jacoco-android'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'jacoco-android'
+//apply plugin: 'com.novoda.bintray-release'
 
 android {
 
@@ -21,11 +21,11 @@ android {
     versionName "0.0.10"
   }
 
-  compileOptions {
+  /*compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_7
     targetCompatibility JavaVersion.VERSION_1_7
   }
-
+*/
   buildTypes {
     debug {
       testCoverageEnabled true
@@ -50,18 +50,18 @@ tasks.withType(Test) {
 dependencies {
   compile "com.google.firebase:firebase-auth:$firebase_version"
   compile "com.google.firebase:firebase-database:$firebase_version"
-  compile 'io.reactivex:rxjava:1.1.8'
-  compile 'com.android.support:support-annotations:24.1.1'
+  compile "io.reactivex:rxjava:$rxjava_version"
+  compile "com.android.support:support-annotations:$support_library_version"
 
 
   testCompile 'junit:junit:4.12'
   testCompile "org.mockito:mockito-core:2.0.7-beta"
-  testCompile 'io.reactivex:rxjava:1.1.8'
+  testCompile "io.reactivex:rxjava:$rxjava_version"
   testCompile 'org.assertj:assertj-core:1.7.1'
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
-publish {
+/*publish {
   userOrg = 'kelvin'
   groupId = 'com.kelvinapps'
   artifactId = 'rxfirebase'
@@ -69,6 +69,7 @@ publish {
   desc = 'RxJava wrapper on Google Firebase for Android library'
   website = 'https://github.com/nmoskalenko/rxFirebase'
 }
+*/
 repositories {
   mavenCentral()
 }

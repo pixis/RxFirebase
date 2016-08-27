@@ -37,28 +37,15 @@ public class RxFirebaseChildEvent<T> {
         return value;
     }
 
-    public void setValue(@NonNull T value) {
-        this.value = value;
-    }
-
     @NonNull
     public String getPreviousChildName() {
         return previousChildName;
-    }
-
-    public void setPreviousChildName(@NonNull String previousChildName) {
-        this.previousChildName = previousChildName;
     }
 
     @NonNull
     public EventType getEventType() {
         return eventType;
     }
-
-    public void setEventType(@NonNull EventType eventType) {
-        this.eventType = eventType;
-    }
-
 
     @Override
     public boolean equals(Object o) {
