@@ -4,14 +4,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.kelvinapps.rxfirebase.exceptions.RxFirebaseDataException
-import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
-import org.mockito.MockitoAnnotations
 import rx.observers.TestSubscriber
 import rx.schedulers.Schedulers
 import java.util.*
@@ -31,50 +27,6 @@ class RxFirebaseDatabaseTests {
     private val testDataList = ArrayList<TestData>()
     private val testDataMap = HashMap<String, TestData>()
 
-    private var testChildEventAdded: DataSnapshotEvent<TestData>? = null
-    private var testChildEventChanged: DataSnapshotEvent<TestData>? = null
-    private var testChildEventRemoved: DataSnapshotEvent<TestData>? = null
-    private var testChildEventMoved: DataSnapshotEvent<TestData>? = null
-
-    @Before
-    fun setup() {
-        MockitoAnnotations.initMocks(this)
-
-        testDataList.add(testData)
-        testDataMap.put("key", testData)
-        testChildEventAdded = DataSnapshotEvent(EventType.ADDED, testData, "root")
-        testChildEventChanged = DataSnapshotEvent(EventType.CHANGED, testData, "root")
-        testChildEventRemoved = DataSnapshotEvent(EventType.REMOVED, testData)
-        testChildEventMoved = DataSnapshotEvent(EventType.MOVED, testData, "root")
-
-        `when`(mockFirebaseDataSnapshot.getValue(TestData::class.java)).thenReturn(testData)
-        `when`(mockFirebaseDataSnapshot.key).thenReturn("key")
-        `when`(mockFirebaseDataSnapshot.children).thenReturn(Arrays.asList(mockFirebaseDataSnapshot))
-    }
-
-    /*@Test
-    @Throws(InterruptedException::class)
-    fun testObserveSingleValue() {
-
-        val testSubscriber = TestSubscriber<TestData>()
-
-        mockDatabase.observeValueEvent()
-                .first()
-                .mapTo(TestData::class.java)
-                .subscribeOn(Schedulers.immediate())
-                .subscribe(testSubscriber)
-
-        val argument = ArgumentCaptor.forClass(ValueEventListener::class.java)
-        verify<DatabaseReference>(mockDatabase).addValueEventListener(argument.capture())
-        argument.value.onDataChange(mockFirebaseDataSnapshot)
-
-        testSubscriber.assertNoErrors()
-        testSubscriber.assertValueCount(1)
-        testSubscriber.assertReceivedOnNext(listOf(testData))
-        testSubscriber.assertCompleted()
-        testSubscriber.unsubscribe()
-    }*/
-
     @Test
     @Throws(InterruptedException::class)
     fun testObserveSingleValue_Disconnected() {
@@ -86,23 +38,23 @@ class RxFirebaseDatabaseTests {
         verify<DatabaseReference>(mockDatabase).addValueEventListener(argument.capture())
         argument.value.onCancelled(DatabaseError.zzagb(DatabaseError.DISCONNECTED))
 
-        testSubscriber.assertError(RxFirebaseDataException::class.java)
+        testSubscriber.assertError(com.google.firebase.database.DatabaseException::class.java)
         testSubscriber.assertNotCompleted()
         testSubscriber.unsubscribe()
     }
-/*
-    @Test
+
+    /*@Test
     @Throws(InterruptedException::class)
     fun testObserveValuesList_Failed() {
 
         val testSubscriber = TestSubscriber<List<TestData>>()
-        RxFirebaseDatabase.observeSingleValueEvent(mockDatabase, TestData::class.java).subscribeOn(Schedulers.immediate()).toList().subscribe(testSubscriber)
+        RxFirebaseDatabase.observeValueEvent(mockDatabase).mapTo(TestData::class.java).subscribeOn(Schedulers.immediate()).toList().subscribe(testSubscriber)
 
         val argument = ArgumentCaptor.forClass(ValueEventListener::class.java)
         verify<DatabaseReference>(mockDatabase).addListenerForSingleValueEvent(argument.capture())
-        argument.value.onCancelled(DatabaseError.zzadi(DatabaseError.OPERATION_FAILED))
+        argument.value.onCancelled(DatabaseException.zzadi(DatabaseException.OPERATION_FAILED))
 
-        testSubscriber.assertError(RxFirebaseDataException::class.java)
+        testSubscriber.assertError(DatabaseErrorException::class.java)
         testSubscriber.assertNotCompleted()
         testSubscriber.unsubscribe()
     }
@@ -141,132 +93,8 @@ class RxFirebaseDatabaseTests {
         testSubscriber.assertReceivedOnNext(listOf(testData))
         testSubscriber.assertCompleted()
         testSubscriber.unsubscribe()
-    }
+    }*/
 
-    @Test
-    @Throws(InterruptedException::class)
-    fun testObserveValuesList() {
-
-        val testSubscriber = TestSubscriber<List<TestData>>()
-        RxFirebaseDatabase.observeSingleValueEvent(mockDatabase, TestData::class.java).subscribeOn(Schedulers.immediate()).toList().subscribe(testSubscriber)
-
-        val argument = ArgumentCaptor.forClass(ValueEventListener::class.java)
-        verify<DatabaseReference>(mockDatabase).addListenerForSingleValueEvent(argument.capture())
-        argument.value.onDataChange(mockFirebaseDataSnapshot)
-
-        testSubscriber.assertNoErrors()
-        testSubscriber.assertValueCount(1)
-        testSubscriber.assertReceivedOnNext(listOf<List<TestData>>(testDataList))
-        testSubscriber.assertCompleted()
-        testSubscriber.unsubscribe()
-    }
-
-    @Test
-    @Throws(InterruptedException::class)
-    fun testObserveValuesMap() {
-
-        val testSubscriber = TestSubscriber<Map<String, TestData>>()
-        RxFirebaseDatabase.observeSingleValueEvent(mockDatabase).subscribeOn(Schedulers.immediate()).toMap(Func1<com.google.firebase.database.DataSnapshot, kotlin.String> { dataSnapshot -> dataSnapshot.key }, Func1<com.google.firebase.database.DataSnapshot, com.kelvinapps.rxfirebase.RxFirebaseDatabaseTests.TestData> { dataSnapshot -> dataSnapshot.getValue(TestData::class.java) }, Func0<kotlin.collections.Map<kotlin.String, com.kelvinapps.rxfirebase.RxFirebaseDatabaseTests.TestData>> { LinkedHashMap() }).subscribe(testSubscriber)
-
-        val argument = ArgumentCaptor.forClass(ValueEventListener::class.java)
-        verify<DatabaseReference>(mockDatabase).addListenerForSingleValueEvent(argument.capture())
-        argument.value.onDataChange(mockFirebaseDataSnapshot)
-
-        testSubscriber.assertNoErrors()
-        testSubscriber.assertValueCount(1)
-        testSubscriber.assertReceivedOnNext(listOf<Map<String, TestData>>(testDataMap))
-        testSubscriber.assertCompleted()
-        testSubscriber.unsubscribe()
-    }
-
-    @Test
-    @Throws(InterruptedException::class)
-    fun testObserveChildrenEvents_Added() {
-
-        val testSubscriber = TestSubscriber<DataSnapshotEvent<TestData>>()
-        RxFirebaseDatabase.observeChildEvent(mockDatabase, TestData::class.java).subscribeOn(Schedulers.immediate()).subscribe(testSubscriber)
-
-        val argument = ArgumentCaptor.forClass(ChildEventListener::class.java)
-        verify<DatabaseReference>(mockDatabase).addChildEventListener(argument.capture())
-        argument.value.onChildAdded(mockFirebaseDataSnapshot, "root")
-
-        testSubscriber.assertNoErrors()
-        testSubscriber.assertValueCount(1)
-        testSubscriber.assertReceivedOnNext(listOf<DataSnapshotEvent<TestData>>(testChildEventAdded))
-        testSubscriber.assertNotCompleted()
-        testSubscriber.unsubscribe()
-    }
-
-    @Test
-    @Throws(InterruptedException::class)
-    fun testObserveChildrenEvents_Changed() {
-
-        val testSubscriber = TestSubscriber<DataSnapshotEvent<TestData>>()
-        RxFirebaseDatabase.observeChildEvent(mockDatabase, TestData::class.java).subscribeOn(Schedulers.immediate()).subscribe(testSubscriber)
-
-        val argument = ArgumentCaptor.forClass(ChildEventListener::class.java)
-        verify<DatabaseReference>(mockDatabase).addChildEventListener(argument.capture())
-        argument.value.onChildChanged(mockFirebaseDataSnapshot, "root")
-
-        testSubscriber.assertNoErrors()
-        testSubscriber.assertValueCount(1)
-        testSubscriber.assertReceivedOnNext(listOf<DataSnapshotEvent<TestData>>(testChildEventChanged))
-        testSubscriber.assertNotCompleted()
-        testSubscriber.unsubscribe()
-    }
-
-    @Test
-    @Throws(InterruptedException::class)
-    fun testObserveChildrenEvents_Removed() {
-
-        val testSubscriber = TestSubscriber<DataSnapshotEvent<TestData>>()
-        RxFirebaseDatabase.observeChildEvent(mockDatabase, TestData::class.java).subscribeOn(Schedulers.immediate()).subscribe(testSubscriber)
-
-        val argument = ArgumentCaptor.forClass(ChildEventListener::class.java)
-        verify<DatabaseReference>(mockDatabase).addChildEventListener(argument.capture())
-        argument.value.onChildRemoved(mockFirebaseDataSnapshot)
-
-        testSubscriber.assertNoErrors()
-        testSubscriber.assertValueCount(1)
-        testSubscriber.assertReceivedOnNext(listOf<DataSnapshotEvent<TestData>>(testChildEventRemoved))
-        testSubscriber.assertNotCompleted()
-        testSubscriber.unsubscribe()
-    }
-
-    @Test
-    @Throws(InterruptedException::class)
-    fun testObserveChildrenEvents_Moved() {
-
-        val testSubscriber = TestSubscriber<DataSnapshotEvent<TestData>>()
-        RxFirebaseDatabase.observeChildEvent(mockDatabase, TestData::class.java).subscribeOn(Schedulers.immediate()).subscribe(testSubscriber)
-
-        val argument = ArgumentCaptor.forClass(ChildEventListener::class.java)
-        verify<DatabaseReference>(mockDatabase).addChildEventListener(argument.capture())
-        argument.value.onChildMoved(mockFirebaseDataSnapshot, "root")
-
-        testSubscriber.assertNoErrors()
-        testSubscriber.assertValueCount(1)
-        testSubscriber.assertReceivedOnNext(listOf<DataSnapshotEvent<TestData>>(testChildEventMoved))
-        testSubscriber.assertNotCompleted()
-        testSubscriber.unsubscribe()
-    }
-
-    @Test
-    @Throws(InterruptedException::class)
-    fun testObserveChildrenEvents_Cancelled() {
-
-        val testSubscriber = TestSubscriber<DataSnapshotEvent<TestData>>()
-        RxFirebaseDatabase.observeChildEvent(mockDatabase, TestData::class.java).subscribeOn(Schedulers.immediate()).subscribe(testSubscriber)
-
-        val argument = ArgumentCaptor.forClass(ChildEventListener::class.java)
-        verify<DatabaseReference>(mockDatabase).addChildEventListener(argument.capture())
-        argument.value.onCancelled(DatabaseError.zzadi(DatabaseError.DISCONNECTED))
-
-        testSubscriber.assertError(RxFirebaseDataException::class.java)
-        testSubscriber.assertNotCompleted()
-        testSubscriber.unsubscribe()
-    }
-*/
     internal inner class TestData {
         var id: Int = 0
         var str: String? = null
