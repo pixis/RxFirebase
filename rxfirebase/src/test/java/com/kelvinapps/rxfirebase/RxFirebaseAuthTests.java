@@ -99,7 +99,7 @@ public class RxFirebaseAuthTests {
     public void signInAnonymously() throws InterruptedException {
 
         TestSubscriber<AuthResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.signInAnonymously(mockAuth)
+        RxFirebaseAuth.INSTANCE.signInAnonymously(mockAuth)
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -119,7 +119,7 @@ public class RxFirebaseAuthTests {
     public void signInAnonymously_Failed() throws InterruptedException {
 
         TestSubscriber<AuthResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.signInAnonymously(mockAuth)
+        RxFirebaseAuth.INSTANCE.signInAnonymously(mockAuth)
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -137,7 +137,7 @@ public class RxFirebaseAuthTests {
     public void signInWithEmailAndPassword() throws InterruptedException {
 
         TestSubscriber<AuthResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.signInWithEmailAndPassword(mockAuth, "email", "password")
+        RxFirebaseAuth.INSTANCE.signInWithEmailAndPassword(mockAuth, "email", "password")
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -157,7 +157,7 @@ public class RxFirebaseAuthTests {
     public void signInWithEmailAndPassword_AuthError() throws InterruptedException {
 
         TestSubscriber<AuthResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.signInWithEmailAndPassword(mockAuth, "email", "password")
+        RxFirebaseAuth.INSTANCE.signInWithEmailAndPassword(mockAuth, "email", "password")
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -175,7 +175,7 @@ public class RxFirebaseAuthTests {
     public void signInWithCredential() throws InterruptedException {
 
         TestSubscriber<AuthResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.signInWithCredential(mockAuth, mockCredentials)
+        RxFirebaseAuth.INSTANCE.signInWithCredential(mockAuth, mockCredentials)
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -195,7 +195,7 @@ public class RxFirebaseAuthTests {
     public void signInWithCustomToken() throws InterruptedException {
 
         TestSubscriber<AuthResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.signInWithCustomToken(mockAuth, "token")
+        RxFirebaseAuth.INSTANCE.signInWithCustomToken(mockAuth, "token")
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -215,7 +215,7 @@ public class RxFirebaseAuthTests {
     public void createUserWithEmailAndPassword() throws InterruptedException {
 
         TestSubscriber<AuthResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.createUserWithEmailAndPassword(mockAuth, "email", "password")
+        RxFirebaseAuth.INSTANCE.createUserWithEmailAndPassword(mockAuth, "email", "password")
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -235,7 +235,7 @@ public class RxFirebaseAuthTests {
     public void fetchProvidersForEmail() throws InterruptedException {
 
         TestSubscriber<ProviderQueryResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.fetchProvidersForEmail(mockAuth, "email")
+        RxFirebaseAuth.INSTANCE.fetchProvidersForEmail(mockAuth, "email")
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -255,7 +255,7 @@ public class RxFirebaseAuthTests {
     public void sendPasswordResetEmail() throws InterruptedException {
 
         TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.sendPasswordResetEmail(mockAuth, "email")
+        RxFirebaseAuth.INSTANCE.sendPasswordResetEmail(mockAuth, "email")
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -275,7 +275,7 @@ public class RxFirebaseAuthTests {
     public void testObserveAuthState() throws InterruptedException {
 
         TestSubscriber<FirebaseUser> testSubscriber = new TestSubscriber<>();
-        RxFirebaseAuth.observeAuthState(mockAuth)
+        RxFirebaseAuth.INSTANCE.observeAuthState(mockAuth)
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 

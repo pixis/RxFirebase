@@ -1,7 +1,6 @@
 package com.kelvinapps.rxfirebase
 
 import com.google.firebase.database.*
-import com.kelvinapps.rxfirebase.RxFirebaseChildEvent.EventType
 import com.kelvinapps.rxfirebase.exceptions.RxFirebaseDataException
 import rx.Observable
 import rx.subscriptions.Subscriptions
@@ -16,11 +15,11 @@ object RxFirebaseDatabase {
             val valueEventListener = query.addValueEventListener(
                     object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            subscriber.onSubscribedNext(dataSnapshot)
+                            subscriber.onNext(dataSnapshot)
                         }
 
                         override fun onCancelled(error: DatabaseError) {
-                            subscriber.onSubscribedError(RxFirebaseDataException(error))
+                            subscriber.onError(RxFirebaseDataException(error))
                         }
                     })
 
@@ -28,36 +27,45 @@ object RxFirebaseDatabase {
         }
     }
 
-    fun observeChildEvent(query: Query): Observable<RxFirebaseChildEvent<DataSnapshot>> {
+    fun observeChildEvent(query: Query): Observable<DataSnapshotEvent<DataSnapshot>> {
         return Observable.create { subscriber ->
             val childEventListener = query.addChildEventListener(
                     object : ChildEventListener {
 
-                        override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String) {
-                            subscriber.onSubscribedNext(
-                                    RxFirebaseChildEvent(dataSnapshot, previousChildName,
-                                            EventType.ADDED))
+                        override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                            val eventData = EventData(key = dataSnapshot.key,
+                                    previousChildKey = previousChildName.orEmpty(),
+                                    eventType = EventType.ADDED)
+                            val dataSnapshotEvent = DataSnapshotEvent(eventData, dataSnapshot)
+                            subscriber.onNext(dataSnapshotEvent)
                         }
 
-                        override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String) {
-                                subscriber.onSubscribedNext(
-                                        RxFirebaseChildEvent(dataSnapshot, previousChildName,
-                                                EventType.CHANGED))
+                        override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                            val eventData = EventData(key = dataSnapshot.key,
+                                    previousChildKey = previousChildName.orEmpty(),
+                                    eventType = EventType.CHANGED)
+                            val dataSnapshotEvent = DataSnapshotEvent(eventData, dataSnapshot)
+                            subscriber.onNext(dataSnapshotEvent)
                         }
 
                         override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                                subscriber.onSubscribedNext(RxFirebaseChildEvent(dataSnapshot,
-                                        EventType.REMOVED))
+                            val eventData = EventData(key = dataSnapshot.key,
+                                    previousChildKey = "",
+                                    eventType = EventType.REMOVED)
+                            val dataSnapshotEvent = DataSnapshotEvent(eventData, dataSnapshot)
+                            subscriber.onNext(dataSnapshotEvent)
                         }
 
-                        override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String) {
-                                subscriber.onSubscribedNext(
-                                        RxFirebaseChildEvent(dataSnapshot, previousChildName,
-                                                EventType.MOVED))
+                        override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                            val eventData = EventData(key = dataSnapshot.key,
+                                    previousChildKey = previousChildName.orEmpty(),
+                                    eventType = EventType.MOVED)
+                            val dataSnapshotEvent = DataSnapshotEvent(eventData, dataSnapshot)
+                            subscriber.onNext(dataSnapshotEvent)
                         }
 
                         override fun onCancelled(error: DatabaseError) {
-                                subscriber.onSubscribedError(RxFirebaseDataException(error))
+                            subscriber.onError(RxFirebaseDataException(error))
                         }
                     })
 

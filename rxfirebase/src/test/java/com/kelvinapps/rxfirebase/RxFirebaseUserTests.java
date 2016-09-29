@@ -95,7 +95,7 @@ public class RxFirebaseUserTests {
     public void getToken() throws InterruptedException {
 
         TestSubscriber<GetTokenResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseUser.getToken(mockUser, true)
+        RxFirebaseUser.INSTANCE.getToken(mockUser, true)
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -115,7 +115,7 @@ public class RxFirebaseUserTests {
     public void updateEmail() throws InterruptedException {
 
         TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
-        RxFirebaseUser.updateEmail(mockUser, "newemail")
+        RxFirebaseUser.INSTANCE.updateEmail(mockUser, "newemail")
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -135,7 +135,7 @@ public class RxFirebaseUserTests {
     public void updatePassword() throws InterruptedException {
 
         TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
-        RxFirebaseUser.updatePassword(mockUser, "password")
+        RxFirebaseUser.INSTANCE.updatePassword(mockUser, "password")
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -155,7 +155,7 @@ public class RxFirebaseUserTests {
     public void updateProfile() throws InterruptedException {
 
         TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
-        RxFirebaseUser.updateProfile(mockUser, userProfileChangeRequest)
+        RxFirebaseUser.INSTANCE.updateProfile(mockUser, userProfileChangeRequest)
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -175,7 +175,7 @@ public class RxFirebaseUserTests {
     public void delete() throws InterruptedException {
 
         TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
-        RxFirebaseUser.delete(mockUser)
+        RxFirebaseUser.INSTANCE.delete(mockUser)
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -195,7 +195,7 @@ public class RxFirebaseUserTests {
     public void reauthenticate() throws InterruptedException {
 
         TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
-        RxFirebaseUser.reauthenticate(mockUser, credential)
+        RxFirebaseUser.INSTANCE.reauthenticate(mockUser, credential)
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 
@@ -215,7 +215,7 @@ public class RxFirebaseUserTests {
     public void linkWithCredential() throws InterruptedException {
 
         TestSubscriber<AuthResult> testSubscriber = new TestSubscriber<>();
-        RxFirebaseUser.linkWithCredential(mockUser, credential)
+        RxFirebaseUser.INSTANCE.linkWithCredential(mockUser, credential)
                 .subscribeOn(Schedulers.immediate())
                 .subscribe(testSubscriber);
 

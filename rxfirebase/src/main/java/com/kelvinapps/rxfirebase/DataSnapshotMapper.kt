@@ -27,7 +27,7 @@ abstract class DataSnapshotMapper<T, U> private constructor() : Func1<T, U> {
         }
     }
 
-    private class ChildEventDataSnapshotMapper<U>(clazz: Class<U>) : DataSnapshotMapper<RxFirebaseChildEvent<DataSnapshot>, RxFirebaseChildEvent<U>>() {
+    private class ChildEventDataSnapshotMapper<U>(clazz: Class<U>) : DataSnapshotMapper<DataSnapshotEvent<DataSnapshot>, DataSnapshotEvent<U>>() {
 
         private val dataSnapshotMapper: DataSnapshotMapper<DataSnapshot, U>
 
@@ -35,10 +35,11 @@ abstract class DataSnapshotMapper<T, U> private constructor() : Func1<T, U> {
             this.dataSnapshotMapper = DataSnapshotMapper.of(clazz)
         }
 
-        override fun call(rxFirebaseChildEvent: RxFirebaseChildEvent<DataSnapshot>): RxFirebaseChildEvent<U> {
-            val value = dataSnapshotMapper.call(rxFirebaseChildEvent.value)
-            return RxFirebaseChildEvent(value, rxFirebaseChildEvent.previousChildName,
-                    rxFirebaseChildEvent.eventType)
+        override fun call(dataSnapshotEvent: DataSnapshotEvent<DataSnapshot>): DataSnapshotEvent<U> {
+            val value = dataSnapshotMapper.call(dataSnapshotEvent.value)
+            return DataSnapshotEvent(
+                    eventData = dataSnapshotEvent.eventData,
+                    value = value)
         }
     }
 
@@ -48,7 +49,7 @@ abstract class DataSnapshotMapper<T, U> private constructor() : Func1<T, U> {
             return TypedDataSnapshotMapper(clazz)
         }
 
-        fun <U> ofChild(clazz: Class<U>): DataSnapshotMapper<RxFirebaseChildEvent<DataSnapshot>, RxFirebaseChildEvent<U>> {
+        fun <U> ofChild(clazz: Class<U>): DataSnapshotMapper<DataSnapshotEvent<DataSnapshot>, DataSnapshotEvent<U>> {
             return ChildEventDataSnapshotMapper(clazz)
         }
     }
