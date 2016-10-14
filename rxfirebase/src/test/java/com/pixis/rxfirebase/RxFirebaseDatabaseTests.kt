@@ -1,4 +1,4 @@
-package com.kelvinapps.rxfirebase
+package com.pixis.rxfirebase
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

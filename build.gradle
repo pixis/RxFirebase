@@ -2,28 +2,30 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.0.3'
-        support_library_version = '24.2.0'
+        kotlin_version = '1.0.4'
+        support_library_version = '24.2.1'
         build_tools_version = '24.0.2'
-        firebase_version = '9.4.0'
-        rxjava_version = '1.1.9'
+        firebase_version = '9.6.1'
+        rxjava_version = '1.2.0'
+        rxjava_proguard_version = '1.2.0.0'
         timber_version = '4.3.0'
+        butterknife_version = '8.4.0'
+        nucleus_version = '3.0.1'
+        utilities_version = '3.0.2'
     }
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath 'com.android.tools.build:gradle:2.2.0-beta2'
-    classpath 'com.google.gms:google-services:3.0.0'
-    //classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
-    //classpath 'com.novoda:bintray-release:0.3.4'
-    //classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
-      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-  }
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.novoda:bintray-release:0.3.4'
+    }
 }
 
 allprojects {
-  repositories {
-    jcenter()
-  }
+    repositories {
+        jcenter()
+    }
 }
