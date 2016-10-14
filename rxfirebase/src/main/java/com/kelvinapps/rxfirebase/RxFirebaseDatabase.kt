@@ -4,17 +4,19 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
+import com.jakewharton.rxrelay.BehaviorRelay
 import rx.Observable
 import rx.subscriptions.Subscriptions
 
 object RxFirebaseDatabase {
 
     fun observeValueEvent(query: Query): Observable<DataSnapshot> {
-        return Observable.create { subscriber ->
+        return BehaviorRelay.create { subscriber ->
             val valueEventListener = query.addValueEventListener(
                     object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             subscriber.onNext(dataSnapshot)
+                            subscriber.onCompleted()
                         }
 
                         override fun onCancelled(error: DatabaseError) {
