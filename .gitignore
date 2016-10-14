@@ -34,3 +34,5 @@ captures/
 *.DS_Store
 /.idea
 *.iml
+
+gradle.properties

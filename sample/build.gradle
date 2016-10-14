@@ -6,8 +6,8 @@ android {
     buildToolsVersion "$build_tools_version"
 
     defaultConfig {
-        applicationId "kelvinapps.com.sample"
-        minSdkVersion 9
+        applicationId "pixis.com.sample"
+        minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
