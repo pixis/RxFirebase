@@ -1,6 +1,6 @@
 # RxFirebase
 
-RxJava wrapper written in kotlin for Google's [Firebase for Android](https://www.firebase.com/docs/android/) library.
+RxJava wrapper to simplify usage of Google's [Firebase for Android](https://www.firebase.com/docs/android/) library.
 
 
 ## Usage
