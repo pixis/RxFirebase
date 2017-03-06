@@ -4,12 +4,36 @@ RxJava wrapper written in kotlin for Google's [Firebase for Android](https://www
 
 
 ## Usage
-Library provides set of static methods of classes:
-- RxFirebaseAuth
-- RxFirebaseUser
-- RxFirebaseDatabase
 
-Modified from https://github.com/nmoskalenko/RxFirebase
+```
+//Kotlin
+//Adds a valueEventListener to a single item
+FirebaseDatabase.getInstance().getReference("users/1")
+                              .observe()
+                              .mapTo(User::class.java)
+                              .subscribe { 
+                                    user -> Log.v(user.id)
+                              }
+//Adds a valueEventListener to a list of items
+FirebaseDatabase.getInstance().getReference("users")
+                              .observe()
+                              .mapChildrenTo(User::class.java)
+                              .subscribe {
+                                    users -> Log.v(users[0].id)
+                              }
+
+//Java
+RxFirebaseDatabase.observeValueEvent(
+                                     FirebaseDatabase.getInstance().getReference("users")
+                                     );
+
+```
+
+## Installation
+
+```
+compile 'com.github.pixis:rxfirebase:1.0.5'
+```
 
 ## License
 
